@@ -25,6 +25,9 @@ const handleCart = (state = cart, action) => {
 
     case "DELETEITEM":
       return state.filter((item) => item.id !== product.id);
+    
+    case "CLEARCART":
+      return []
 
     default:
       return state;

@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem, removeItem, deleteItem } from '../redux/actions';
+import { addItem, removeItem, deleteItem, clearCart } from '../redux/actions';
 import { useNavigate } from "react-router-dom";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { NavLink } from 'react-router-dom';
 
 const Cart = () => {
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [showCheckoutImage, setShowCheckoutImage] = useState(false);
   const cart = useSelector((state) => state.handleCart);
   const dispatch = useDispatch();
+
+  console.log(cart)
 
   const handleButtonAdd = (product) => {
     dispatch(addItem(product));
@@ -36,11 +40,16 @@ const Cart = () => {
     return total.toFixed(2);
   };
 
+  const handleCheckoutClick = () => {
+    dispatch(clearCart());
+    setShowCheckoutImage(true);
+  };
+
   useEffect(() => {
     // Simulate loading effect
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -71,7 +80,15 @@ const Cart = () => {
       <div className="mx-5">
         {
           loading ? 
-            <SkeletonLoader />
+              <SkeletonLoader />
+            :
+              showCheckoutImage ? 
+                <div className="d-flex flex-column justify-content-center align-items-center">
+                    <img src="./assets/images/order-place.webp" alt="Order Placed Successfully" />
+                    <div className="px-4 py-2 btn btn-outline-success mt-3" onClick={() => handleNavigation()}>
+                      <h4 className="m-0">Continue Shopping</h4>
+                    </div>
+                </div>
             : 
               cart && cart.length ? 
                 cart.map((product) => (
@@ -95,12 +112,12 @@ const Cart = () => {
                   </div>
                 ))
             : 
-              <img src="./assets/images/empty_cart.jpg" alt="Your Cart is Empty" style={{ width: "60%", marginLeft: "20rem" }} onClick={handleNavigation}/>
+              <img src="./assets/images/empty_cart.jpg" alt="Your Cart is Empty" style={{ width: "60%", marginLeft: "20rem" }} onClick={() => handleNavigation()}/>
         }
       </div>
 
       {
-        cart && cart.length > 0 && !loading && (
+        cart && cart.length > 0 && !loading && !showCheckoutImage &&(
           <div className="border border-dark rounded mx-5">
             <div className="bg-success text-white p-2 mb-2 d-flex justify-content-center">
               <h5 className="m-0">SUMMARY</h5>
@@ -108,9 +125,15 @@ const Cart = () => {
             <div className="text-center total-amount p-4 mb-3">
               <h4 className="m-0">Total Amount: ${getTotalAmount()}</h4>
             </div>
+            <div className="bg-success text-white p-2 d-flex justify-content-center" onClick={() => handleCheckoutClick()}>
+              PROCEED TO CHECKOUT
+            </div>
           </div>
         )
       }
+
+
+
     </div>
   );
 };

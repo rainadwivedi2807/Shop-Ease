@@ -9,12 +9,14 @@ import { NavLink } from 'react-router-dom';
 const Cart = () => {
 
   const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [showCheckoutImage, setShowCheckoutImage] = useState(false);
+
   const cart = useSelector((state) => state.handleCart);
   const dispatch = useDispatch();
-
-  console.log(cart)
+  
+  const discount = 0.10 // 10% discount on total  amount
 
   const handleButtonAdd = (product) => {
     dispatch(addItem(product));
@@ -32,11 +34,17 @@ const Cart = () => {
     navigate(`/`);
   };
 
-  const getTotalAmount = () => {
+  const getSubTotalAmount = () => {
     let total = 0;
     cart.forEach((product) => {
       total += product.qty * product.price;
     });
+    return total.toFixed(2);
+  };
+
+  const getTotalAmount = () => {
+    let Subtotal = getSubTotalAmount();
+    let total = Subtotal - (Subtotal*discount);
     return total.toFixed(2);
   };
 
@@ -123,8 +131,14 @@ const Cart = () => {
               <h5 className="m-0">SUMMARY</h5>
             </div>
             <div className="text-center total-amount p-4 mb-3">
-              <h4 className="m-0">Total Amount: ${getTotalAmount()}</h4>
-            </div>
+              <h4 className="m-0">Sub Total : ${getSubTotalAmount()}</h4>
+              <h4 className="m-0">Discount: {(discount * 100) + `%`} </h4>
+
+              <hr/>     
+
+              <h4 className="m-0">Total Amount : ${getTotalAmount()}</h4>       
+              
+              </div>
             <div className="bg-success text-white p-2 d-flex justify-content-center" onClick={() => handleCheckoutClick()}>
               PROCEED TO CHECKOUT
             </div>

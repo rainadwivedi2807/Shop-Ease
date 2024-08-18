@@ -82,18 +82,25 @@ const Product = () => {
                 <div className="col-md-5">
                   <img src={product.image} alt={product.title} height="400px" width="400px" />
                 </div>
+
                 <div className="col-md-6">
                   <h4 className="text-uppercase text-black-50">{product.category}</h4>
+
                   <h1 className="display-5">{product.title}</h1>
+
                   <p className="lead fw-bolder">
                     <i className="fa fa-star" style={{ marginRight: '0.5rem' }} />
                     Rating {product.rating && product.rating.rate}
                   </p>
+
                   <h3 className="display-6 fw-bold my-4">${product.price}</h3>
+
                   <p className="lead">{product.description}</p>
+
                   <button className="px-4 py-2 btn btn-outline-success ms-2" onClick={() => addProductToCart(product)}>
                     Add to Cart
                   </button>
+
                   <NavLink to={`/cart`} className="btn btn-dark ms-2 px-3 py-2">
                     Go to Cart
                   </NavLink>
@@ -102,6 +109,7 @@ const Product = () => {
           }
         </div>
       </div>
+      
       <ToastContainer/>
     </div>
   );
